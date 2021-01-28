@@ -11,8 +11,13 @@ def convert(traj, outfolder, start=0):
         os.mkdir(folder)
         structure = AseAtomsAdaptor.get_structure(atoms)
         msc = Mcsqs(structure)
-        with open(folder + '/str.in', 'w') as outfile:
-            outfile.write(msc.to_string())
+        with open(folder + '/str.out', 'w') as outfile:
+            str_rep = msc.to_string()
+
+            # Remove occupancy information
+            str_rep = str_rep.replace('=1', '')
+            outfile.write(str_rep)
+
         with open(folder + '/energy', 'w') as outfile:
             outfile.write(f"{atoms.get_potential_energy()}\n")
         
