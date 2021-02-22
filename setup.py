@@ -6,6 +6,6 @@ setup(
     author=["David Kleiven"],
     author_email="davidkleiven4462gmail.com",
     long_description="Utility functions for atat",
-    install_requires=['pymatgen', 'ase'],
+    install_requires=['pymatgen', 'ase', 'scipy', 'numpy'],
     scripts=['scripts/traj2atat.py']
 )
