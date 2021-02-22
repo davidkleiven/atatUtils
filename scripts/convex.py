@@ -1,15 +1,7 @@
 import argparse
-from atatutils.utils import str2select_cond
+from atatutils.utils import atoms_with_singlepoint_calc
 from atatutils.convex import convex_hull
 from ase.db import connect
-from ase.calculators.singlepoint import SinglePointCalculator
-
-def db_iterator(db, scond):
-    if scond == "":
-        yield from db.select()
-    else:
-        condition = str2select_cond(scond)
-        yield from db.select(condition)
 
 def points_on_convex(hull):
     idx = set()
@@ -30,15 +22,7 @@ def main():
     args = parser.parse_args()
 
     db = connect(args.db)
-    atoms = []
-    db_ids = []
-    for row in db_iterator(db, args.sel):
-        a = row.toatoms()
-        E = row.get('energy', None)
-        if E is not None:
-            a.calc = SinglePointCalculator(a, energy=E)
-            atoms.append(a)
-            db_ids.append(row.id)
+    atoms, db_ids = atoms_with_singlepoint_calc(db, args.sel)
     hull = convex_hull(atoms)
 
     # Print information of structure on convex hull
